@@ -1,0 +1,67 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+}
+
+.container {
+  max-width: 420px;
+  margin: auto;
+  padding: 10px;
+}
+
+h1 {
+  text-align: center;
+  color: rgb(12, 70, 117);
+}
+
+.producto {
+  background: rgb(12, 70, 117);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 12px;
+}
+
+.producto-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ver-precio {
+  color: #007bff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.precio {
+  margin: 6px 0;
+  font-weight: bold;
+}
+
+.botones {
+  display: flex;
+  gap: 8px;
+}
+
+.botones button {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.reporte {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+pre {
+  white-space: pre-wrap;
+  font-size: 13px;
+  background: #fff;
+  padding: 8px;
+  border-radius: 6px;
+  margin-top: 10px;
+}
