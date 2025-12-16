@@ -4,7 +4,6 @@ import { productos } from "./data/productos"
 const colores = {
   azul: "rgb(12, 70, 117)",
   texto: "#1F2933",
-  textoSecundario: "#4B5563",
   fondo: "#FFFFFF",
   tarjeta: "#FFFFFF",
   borde: "#E5E7EB",
@@ -16,12 +15,7 @@ const colores = {
 function App() {
   const hoy = new Date().toLocaleDateString()
 
-
-  const [mostrarCalculadora, setMostrarCalculadora] = useState(false)
-  const [valorCalc, setValorCalc] = useState("")
-  const [totalCalc, setTotalCalc] = useState(0)
-
-
+  // ---------- ESTADOS ----------
   const [salidas, setSalidas] = useState(() => {
     const data = localStorage.getItem("salidas")
     const fecha = localStorage.getItem("fecha")
@@ -37,11 +31,13 @@ function App() {
   const [productoPrecioVisible, setProductoPrecioVisible] = useState(null)
   const [mostrarReporte, setMostrarReporte] = useState(false)
 
+  // ---------- EFECTO ----------
   useEffect(() => {
     localStorage.setItem("salidas", JSON.stringify(salidas))
     localStorage.setItem("fecha", hoy)
   }, [salidas, hoy])
 
+  // ---------- FUNCIONES ----------
   const registrarSalida = (producto, formaPago) => {
     const nombre = prompt("Nombre del cliente:") || ""
     const telefono = prompt("Teléfono del cliente:") || ""
@@ -104,21 +100,7 @@ function App() {
     alert("Reporte copiado. Pégalo en WhatsApp 👍")
   }
 
-
-  const sumarCalculadora = () => {
-  const numero = parseFloat(valorCalc)
-  if (!isNaN(numero)) {
-    setTotalCalc(prev => prev + numero)
-    setValorCalc("")
-  }
-}
-
-const limpiarCalculadora = () => {
-  setTotalCalc(0)
-  setValorCalc("")
-}
-
-
+  // ---------- UI ----------
   return (
     <div style={{
       maxWidth: "480px",
@@ -215,82 +197,6 @@ const limpiarCalculadora = () => {
         📄 {mostrarReporte ? "Ocultar reporte" : "Ver reporte"}
       </button>
 
-
-<button
-  style={{
-    width: "100%",
-    background: "#374151",
-    color: colores.blanco,
-    border: "none",
-    padding: "12px",
-    borderRadius: "10px",
-    marginTop: "10px"
-  }}
-  onClick={() => setMostrarCalculadora(!mostrarCalculadora)}
->
-  🧮 {mostrarCalculadora ? "Ocultar calculadora" : "Abrir calculadora"}
-</button>
-
-{mostrarCalculadora && (
-  <div style={{
-    marginTop: "10px",
-    border: `1px solid ${colores.borde}`,
-    borderRadius: "12px",
-    padding: "12px",
-    background: colores.tarjeta
-  }}>
-    <input
-      type="number"
-      placeholder="Ingresa un valor"
-      value={valorCalc}
-      onChange={e => setValorCalc(e.target.value)}
-      style={{
-        width: "100%",
-        padding: "10px",
-        marginBottom: "8px"
-      }}
-    />
-
-    <button
-      style={{
-        width: "100%",
-        background: colores.azul,
-        color: colores.blanco,
-        border: "none",
-        padding: "10px",
-        borderRadius: "8px"
-      }}
-      onClick={sumarCalculadora}
-    >
-      ➕ Sumar
-    </button>
-
-    <div style={{
-      marginTop: "10px",
-      fontWeight: "bold",
-      color: colores.azul
-    }}>
-      TOTAL: ${totalCalc.toLocaleString()}
-    </div>
-
-    <button
-      style={{
-        width: "100%",
-        marginTop: "8px"
-      }}
-      onClick={limpiarCalculadora}
-    >
-      Limpiar
-    </button>
-  </div>
-)}
-
-
-
-
-
-      
-
       {mostrarReporte && (
         <>
           <button
@@ -310,4 +216,3 @@ const limpiarCalculadora = () => {
 }
 
 export default App
-
