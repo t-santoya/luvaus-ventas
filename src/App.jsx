@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react"
 import { productos } from "./data/productos"
 
@@ -16,6 +15,12 @@ const colores = {
 
 function App() {
   const hoy = new Date().toLocaleDateString()
+
+
+  const [mostrarCalculadora, setMostrarCalculadora] = useState(false)
+  const [valorCalc, setValorCalc] = useState("")
+  const [totalCalc, setTotalCalc] = useState(0)
+
 
   const [salidas, setSalidas] = useState(() => {
     const data = localStorage.getItem("salidas")
@@ -38,15 +43,16 @@ function App() {
   }, [salidas, hoy])
 
   const registrarSalida = (producto, formaPago) => {
-    const nombre = prompt("Nombre del cliente :") || ""
-    const telefono = prompt("Teléfono del cliente :") || ""
-    const observacion = prompt("Observación :") || ""
+    const nombre = prompt("Nombre del cliente:") || ""
+    const telefono = prompt("Teléfono del cliente:") || ""
+    const observacion = prompt("Observación:") || ""
 
-    setSalidas((prev) => [
+    setSalidas(prev => [
       ...prev,
       {
         item: producto.item,
         nombreProducto: producto.nombre,
+        precio: producto.precio,
         formaPago,
         cliente: { nombre, telefono, observacion },
         fecha: hoy
@@ -63,9 +69,9 @@ function App() {
     const transferencia = salidas.filter(s => s.formaPago === "transferencia")
 
     if (efectivo.length) {
-      texto += "EFECTIVO:\n"
+      texto += "💵 EFECTIVO:\n"
       efectivo.forEach(s => {
-        texto += `${s.item} – ${s.nombreProducto}\n`
+        texto += `${s.item} – ${s.nombreProducto} – $${s.precio.toLocaleString()}\n`
         if (s.cliente.nombre || s.cliente.telefono) {
           texto += `Cliente: ${s.cliente.nombre} ${s.cliente.telefono}\n`
         }
@@ -77,9 +83,9 @@ function App() {
     }
 
     if (transferencia.length) {
-      texto += "TRANSFERENCIA:\n"
+      texto += "🏦 TRANSFERENCIA:\n"
       transferencia.forEach(s => {
-        texto += `${s.item} – ${s.nombreProducto}\n`
+        texto += `${s.item} – ${s.nombreProducto} – $${s.precio.toLocaleString()}\n`
         if (s.cliente.nombre || s.cliente.telefono) {
           texto += `Cliente: ${s.cliente.nombre} ${s.cliente.telefono}\n`
         }
@@ -98,6 +104,21 @@ function App() {
     alert("Reporte copiado. Pégalo en WhatsApp 👍")
   }
 
+
+  const sumarCalculadora = () => {
+  const numero = parseFloat(valorCalc)
+  if (!isNaN(numero)) {
+    setTotalCalc(prev => prev + numero)
+    setValorCalc("")
+  }
+}
+
+const limpiarCalculadora = () => {
+  setTotalCalc(0)
+  setValorCalc("")
+}
+
+
   return (
     <div style={{
       maxWidth: "480px",
@@ -114,7 +135,7 @@ function App() {
         LUVAUS
       </h1>
 
-      {productos.map((p) => (
+      {productos.map(p => (
         <div key={p.item} style={{
           backgroundColor: colores.tarjeta,
           border: `1px solid ${colores.borde}`,
@@ -122,7 +143,6 @@ function App() {
           padding: "12px",
           marginBottom: "12px"
         }}>
-          {/* PRODUCTO (CLICK PARA VER PRECIO) */}
           <div
             onClick={() =>
               setProductoPrecioVisible(
@@ -160,7 +180,7 @@ function App() {
               }}
               onClick={() => registrarSalida(p, "efectivo")}
             >
-                Efectivo
+              Efectivo
             </button>
 
             <button
@@ -174,7 +194,7 @@ function App() {
               }}
               onClick={() => registrarSalida(p, "transferencia")}
             >
-                Transferencia
+              Transferencia
             </button>
           </div>
         </div>
@@ -195,13 +215,86 @@ function App() {
         📄 {mostrarReporte ? "Ocultar reporte" : "Ver reporte"}
       </button>
 
+
+<button
+  style={{
+    width: "100%",
+    background: "#374151",
+    color: colores.blanco,
+    border: "none",
+    padding: "12px",
+    borderRadius: "10px",
+    marginTop: "10px"
+  }}
+  onClick={() => setMostrarCalculadora(!mostrarCalculadora)}
+>
+  🧮 {mostrarCalculadora ? "Ocultar calculadora" : "Abrir calculadora"}
+</button>
+
+{mostrarCalculadora && (
+  <div style={{
+    marginTop: "10px",
+    border: `1px solid ${colores.borde}`,
+    borderRadius: "12px",
+    padding: "12px",
+    background: colores.tarjeta
+  }}>
+    <input
+      type="number"
+      placeholder="Ingresa un valor"
+      value={valorCalc}
+      onChange={e => setValorCalc(e.target.value)}
+      style={{
+        width: "100%",
+        padding: "10px",
+        marginBottom: "8px"
+      }}
+    />
+
+    <button
+      style={{
+        width: "100%",
+        background: colores.azul,
+        color: colores.blanco,
+        border: "none",
+        padding: "10px",
+        borderRadius: "8px"
+      }}
+      onClick={sumarCalculadora}
+    >
+      ➕ Sumar
+    </button>
+
+    <div style={{
+      marginTop: "10px",
+      fontWeight: "bold",
+      color: colores.azul
+    }}>
+      TOTAL: ${totalCalc.toLocaleString()}
+    </div>
+
+    <button
+      style={{
+        width: "100%",
+        marginTop: "8px"
+      }}
+      onClick={limpiarCalculadora}
+    >
+      Limpiar
+    </button>
+  </div>
+)}
+
+
+
+
+
+      
+
       {mostrarReporte && (
         <>
           <button
-            style={{
-              width: "100%",
-              marginTop: "8px"
-            }}
+            style={{ width: "100%", marginTop: "8px" }}
             onClick={copiarReporte}
           >
             Copiar reporte
@@ -217,3 +310,4 @@ function App() {
 }
 
 export default App
+
